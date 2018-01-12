@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script src="/js/spotter/spotter.js" data-modules="form,mobile,components"></script>
+	<link rel="stylesheet" href="scheduler.css"/>
+</head>
+
+
+<body id="body">
+	<spotter-scheduler id="scheduler" blocks-info-url="/services/test?requestType=getSchedulingBlocks" days-per-slide="4"></spotter-scheduler>
+</body>
+
+<script>
+	spotter.testLoaded(function(){
+		spotter.mobile(12, 1297, document.body);
+	}, "complete");
+
+	var s = document.getElementById("scheduler");
+	
+	s.addEventListener('change', function(){
+		var scheduler = s;
+		spotter.ajax({
+			url: '/services/test',
+			data: {unixDate: scheduler.value, requestType:'setAppointment'},
+			success: function(response){
+				response = JSON.parse(response);
+				if(response.status === 'success'){
+					scheduler.disableSelected();
+					scheduler.unmarkSelected();
+					alert('appointment has been successfully set for '+moment.unix(scheduler.value).format('ddd MMM-DD HH:mm - ')+moment.unix(scheduler.value).add(2,'hours').format('HH:mm'));
+				}
+				else{
+					alert('an error occurred setting appointment. please try again or contact us by phone or email');
+				}
+			},
+			error: function(response){
+				console.log(response);
+				alert('an error occurred setting appointment. please try again or contact us by phone or email');
+			}
+		});
+	});
+</script>
+</html>

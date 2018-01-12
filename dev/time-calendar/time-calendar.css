@@ -1,0 +1,159 @@
+spotter-time-calendar {
+  overflow: hidden;
+  position: relative;
+  display:block;
+}
+
+spotter-time-calendar spotter-calendar {
+  display: inline-block;
+  white-space: initial;
+  width: 100%;
+  background-color: white;
+}
+
+spotter-time-calendar .selected-datetime {
+  display: inline-block;
+  font-family: sans-serif;
+  text-align:left;
+}
+
+spotter-time-calendar .selected-date {
+	line-height:1.1em;
+}
+
+spotter-time-calendar .selected-time {
+  font-size: 1.2em;
+  line-height: 1.1em;
+  text-align: right;
+  color:#3F8153;
+}
+
+spotter-time-calendar .selected-time::before {
+  content: "@";
+}
+
+spotter-time-calendar .time {
+  background-color: white;
+  bottom: 0;
+  display: block;
+  left: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+spotter-time-calendar .start-hour {
+	margin-left:2%;
+}
+
+spotter-time-calendar spotter-slot {
+  display: inline-block;
+  margin-top: 2%;
+  width: 28%;
+  padding-bottom: 84%;
+  height: 0;
+}
+
+.divider {
+  display: inline-block;
+  margin-top: 2%;
+  padding-bottom: 57%;
+  position: relative;
+  vertical-align: top;
+  width: 12%;
+}
+
+.divider::after {
+  content: ":";
+  font-size: 3em;
+  height: 0;
+  left: 0;
+  line-height: 0;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 50%;
+}
+
+/* OPTIONAL */
+
+spotter-time-calendar {
+  border: 0.25em solid #37616d;
+  border-radius: 2rem;
+  font-size: 2rem;
+  margin: 5%;
+  overflow: hidden;
+  padding: 0.5em;
+  width: 90%;
+}
+
+spotter-calendar {
+	border:none;
+	border-radius:unset;
+	margin: 0;
+    padding: 0;
+	font-size: 6rem;
+}
+
+spotter-time-calendar spotter-slot::before {
+  border-bottom: 0.2em solid #37616d;
+}
+
+spotter-time-calendar spotter-slot::after {
+  border-top: 0.2em solid #37616d;
+}
+
+spotter-time-calendar div.reel {
+  color: #7fa14e;
+  font-family: Arial;
+}
+
+spotter-slot.start-minute div.reel div.step {
+  font-size: 15em;
+}
+
+spotter-time-calendar spotter-toggle {
+  border: medium none;
+  display: inline-block;
+  height: 0;
+  margin-top: 2%;
+  padding-bottom: 84%;
+  text-transform: uppercase;
+  vertical-align: top;
+  width: 28%;
+}
+
+spotter-time-calendar .title {
+  background-color: #37616d;
+  border-bottom: 0.1em solid #7fa14e;
+  color: white;
+  font-family: Nunito,helvetica;
+  font-size: 1em;
+  height: 2em;
+  line-height: 2em;
+  margin-bottom: 0.5em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+spotter-time-calendar .time .title {
+  margin: 0.5rem 1rem;
+  font-size: 4rem;
+  height: 4rem;
+  line-height: 4rem;
+}
+
+spotter-time-calendar .title-bar .icon {
+  margin: 0;
+}
+
+.time .title-bar {
+  background-color: #37616d;
+  border-bottom: 0.1em solid #7fa14e;
+  color: white;
+  font-family: sans-serif;
+  font-size: 5em;
+  padding: 0 0 0 0.25em;
+  height: 1.25em;
+  line-height: 1.25em;
+}

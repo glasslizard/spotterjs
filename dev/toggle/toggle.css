@@ -1,0 +1,45 @@
+spotter-toggle {
+    background-color: white;
+    border: 1px solid black;
+    height: 600px;
+    position: relative;
+    vertical-align: bottom;
+    width: 200px;
+	overflow:hidden;
+	display:block;
+	font-size:1rem;
+}
+
+spotter-toggle::before, spotter-toggle::after {
+  background-color: white;
+  content: " ";
+  height: 0;
+  opacity: 0.8;
+  padding-bottom: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 102;
+  left:0;
+}
+
+spotter-toggle::before {top:0;}
+spotter-toggle::after {bottom:0;}
+
+spotter-toggle .reel {
+	width:100%;
+	position:absolute;
+}
+
+spotter-toggle .reel div {
+  background-color: white;
+  display: block;
+  font-size: 18em;
+  height: 0;
+  margin-bottom: calc(50% + 9rem);
+  padding-top: calc(50% - 9rem);
+  position: relative;
+  text-align: center;
+  vertical-align: bottom;
+  width: 100%;
+  font-family: sans-serif;
+}

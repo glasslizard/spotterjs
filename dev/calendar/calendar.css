@@ -1,0 +1,148 @@
+spotter-calendar {
+	display:block;
+	padding:.5em;
+	font-size:2rem;
+	margin:.5em;
+}
+
+.title-bar {
+  line-height: 1.4em;
+  padding: 0 0.5em;
+  width: 100%;
+  text-align: left;
+  position:relative;
+}
+
+.selected-date {
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 1.4em;
+}
+
+.manual-date {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	bottom: 100%;
+	left: 0;
+	background: white;
+}
+
+.title-bar .icon {
+  float: right;
+  margin: 0 1em;
+  vertical-align: top;
+  width: 3em;
+  height:auto;
+}
+
+.months-scroll {
+  padding: 0.5em;
+  width: 100%;
+}
+
+.month-bar {
+  white-space: nowrap;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.arrow-left, .arrow-right {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 1.5em;
+}
+
+.months-scroll .name {
+  display: inline-block;
+  height: 2em;
+  line-height: 2em;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: top;
+  white-space: nowrap;
+  width: calc(100% - 2em);
+}
+
+.slide-cont {
+  display: block;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.name span {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.days-name-bar {
+  white-space: nowrap;
+  width: 100%;
+}
+
+.days-bar .name {
+  display: inline-block;
+  text-align: center;
+  text-transform: uppercase;
+  width: calc(100% / 7);
+}
+
+.days-number .inactive, .days-number .active {
+  display: inline-block;
+  text-align: center;
+  width: calc(100% / 7);
+}
+
+/* CUSTOMIZEABLE */
+
+spotter-calendar {
+  border: 0.25em solid #37616d;
+  border-radius: 2rem;
+  overflow: hidden;
+  width: 45rem;
+}
+
+.months-scroll .name {
+  color: #37616d;
+  font-family: Trebuchet MS;
+  font-size: 1.5em;
+}
+
+.days-name-bar {
+  border-bottom: 0.1em solid rgba(0, 0, 0, 0.2);
+  color: gray;
+  font-size: 0.75em;
+}
+
+.days-number .inactive, .days-number .active {
+  font-size: 1em;
+  padding: 0.25em 0;
+}
+
+.days-number .inactive {
+  color: rgb(200,200,200);
+}
+
+.days-number .active {
+  color: #3f8153;
+}
+
+.days-number .active.selected {
+  background-color:#D3E3D8;
+}
+
+.days-number .active.deactivated {
+  color: #d3e3d8;
+}
+
+.selected-date {
+  color: #7fa14e;
+}
+
+
+

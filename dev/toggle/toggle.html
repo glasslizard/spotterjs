@@ -1,0 +1,17 @@
+<html>
+<head>
+	<script src="/js/spotter/spotter.js"></script>
+	<link rel="stylesheet" href="toggle.css"/>
+	<script src="/js/velocity.js"></script>
+</head>
+
+
+<body>
+	<spotter-toggle options="am,pm" value="am"></spotter-toggle>
+</body>
+
+<script src="toggle.js"></script>
+<script>
+	var box = document.querySelector('SPOTTER-TOGGLE');
+	spotter.components.toggle(box);
+</script>

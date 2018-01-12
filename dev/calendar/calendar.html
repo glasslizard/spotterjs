@@ -1,0 +1,22 @@
+<html>
+<head>
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
+	<script src="/js/spotter/spotter.js"></script>
+	<script src="/js/moment.js"></script>
+	<script src="/js/date.js"></script>
+	<script src="/js/velocity.js"></script>
+	<link rel="stylesheet" href="calendar.css"/>
+</head>
+
+
+<body>
+	<spotter-calendar lower-limit="now" upper-limit="-2months +1years"></spotter-calendar>
+</body>
+
+<script src="calendar.js"></script>
+<script>
+	var els=Array.prototype.slice.call(document.querySelectorAll('spotter-calendar'));
+	els.forEach(function(el){
+		spotter.calendar(el);
+	});
+</script>

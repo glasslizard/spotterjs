@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script src="/js/core/core.js"></script>
+	<script src="/js/core/components.js"></script>
+</head>
+
+
+<body>
+
+<slots-scroller>
+	<slots-reel>
+		<slots-frame><img src="/js/core/images/examples/bear.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/edm.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/hawk.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/jaws.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/ponyta.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/sandwiches.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/snozz.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/yoga.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/hide.jpg"/></slots-frame>
+	</slots-reel>
+	<slots-reel>
+		<slots-frame><img src="/js/core/images/examples/bear.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/edm.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/hawk.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/jaws.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/ponyta.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/sandwiches.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/snozz.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/yoga.jpg"/></slots-frame>
+	    <slots-frame><img src="/js/core/images/examples/hide.jpg"/></slots-frame>
+	</slots-reel>
+</slots-scroller>
+
+<style>
+* {
+  box-sizing:border-box;
+  padding:0;
+  margin:0;
+}
+
+slots-scroller {
+  display: block;
+  height: 600px;
+  overflow: hidden;
+  position: relative;
+}
+
+slots-reel {
+  border: 1px solid #ccc;
+  display: inline-block;
+  height: 100%;
+  margin: 0 10px;
+  overflow: hidden;
+  position: relative;
+  width: 200px;
+}
+
+slots-reel::before {
+  background-color: rgba(255, 255, 255, 0.9);
+  content: " ";
+  height: 33.33%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 101;
+}
+slots-reel::after {
+  background-color: rgba(255, 255, 255, 0.9);
+  bottom: 0;
+  content: " ";
+  height: 33.33%;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 101;
+}
+
+slots-scroller .hide-scroll {
+  height: 600px;
+  width: 217px;
+  overflow-y:scroll;
+  position:relative;
+  overflow-x:hidden;
+}
+
+slots-scroller .frames {
+  width:200px;
+  font-size:2rem;
+  display:inline-block
+}
+
+slots-scroller slots-frame {
+  width:200px;
+  height:200px;
+  font-size:2rem;
+  text-align:center;
+  line-height:200px;
+  display:block;
+  overflow:hidden;
+}
+
+slots-scroller slots-frame img {
+	width:100%;
+	min-height:100%;
+}
+</style>
+
+<script>
+
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<div id="[target id]">
+	<core-search-input for="[target id]" search-field="[field name]" limit="[max number of list items to show]">
+	....
+</div>
+	
+		Will look like:
+		<div class="core-search-input">	
+			<input type="text" value="[search value]"/>
+			<div class="core-search-input-list">
+				<div class="core-search-input-list-item">[search value]</div>
+				<div class="core-search-input-list-item">[search value]</div>
+				<div class="core-search-input-list-item">[search value]</div>
+			</div>
+		</div>
+		
+		On instantiation:
+		- if 'for' attribute, looks for searchandsort from target
+			- if no searchandsort found, listens to searchandsort 'ready' event where event.origin == target
+		- otherwise waits for data to be set which activates constructor again
+			
+		- as characters change in input, run searchandsort.searchByFieldFor([field name], [search value])
+		- if [search value] not empty, using searchandsort.getLastSearchResult, create list items in 'core-search-input-list'
+		- if key action taken and key is not a character
+			- if key is 'up' change selected list item by decrementing the selected index to the elder list item
+			- if key is 'down' or 'tab', change selected list item by incrementing the selectd index to the younger list item
+			- if index below 0 or above number of list items, focus input
+			- if 'enter' key and list item is selected, change [search value] to text node value of selected list item
+			- if key is 'backspace', treat it as a character change unless [search value] before key press was empty
+			
+		Optimizations:
+		- only add list items if more needed, otherwise only text nodes are changed.
+		
+		Interactions:
+		- If input loses focus, the auto complete menu is closed.
+		- As characters change, running a search on searchandsort will trigger the search event.
+		
+		Special
+		- Setting [target id] to the id of the search input allows the developer to create a searchandsort with programmatic data
+		

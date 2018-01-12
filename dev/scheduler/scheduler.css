@@ -1,0 +1,113 @@
+spotter-scheduler {
+	width: 100%;
+	height: auto;
+	position: relative;
+	padding: 0 3rem;
+	display: block;
+}
+
+spotter-scheduler .arrow-cont {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	vertical-align: middle;
+	width: 3rem;
+}
+
+spotter-scheduler .arrow-cont.left {
+	left: 0;
+}
+
+spotter-scheduler .arrow-cont.right {
+	right: 0;
+}
+
+spotter-scheduler .left-arrow, spotter-scheduler .right-arrow {
+	width: 0;
+	height: 0;
+	border-top: 6rem solid transparent;
+	border-bottom: 6rem solid transparent;
+}
+
+spotter-scheduler .left-arrow {
+	border-right: 3rem solid #ddd;
+}
+
+spotter-scheduler .right-arrow {
+	border-left: 3rem solid #ddd;
+}
+
+spotter-scheduler .left-arrow.disabled, spotter-scheduler .right-arrow.disabled {
+	opacity: .3;
+}
+
+spotter-scheduler .slider-cont {
+	width: 100%;
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+}
+
+spotter-scheduler .slider {
+	width: auto;
+	white-space: nowrap;
+	position: relative;
+	left: 0;
+	top: 0;
+	font-size: 0;
+}
+
+spotter-scheduler .column {
+	width: 33.33%;
+	display: inline-block;
+	margin: 0;
+	vertical-align: top;
+	border-right: 1px solid #ccc;
+}
+
+spotter-scheduler .label {
+	font-family: verdana;
+	font-weight: 600;
+	text-align: center;
+	background-color: rgba(0,31,88,1);
+	line-height: calc(18px + .3rem);
+	width: 100%;
+	font-size: calc(18px + .3rem);
+	color: white;
+	padding: calc(12px + .4rem);
+}
+
+spotter-scheduler .block {
+	width: 100%;
+	vertical-align: middle;
+	text-align: center;
+	line-height: calc(18px + 0.1rem);
+	border-bottom: 1px solid #ccc;
+	font-size: calc(18px + 0.1rem);
+	position: relative;
+	font-family: verdana;
+	padding: calc(20px + .1rem) 0;
+	word-wrap: break-word;
+	overflow: hidden;
+	white-space: initial;
+}
+
+spotter-scheduler .block::before {
+	position: absolute;
+	background-color: rgba(234,224,58,.3);
+	left: 0;
+	top: 0;
+	content: '';
+	height: 100%;
+	width: 100%;
+	display: inline-block;
+	z-index: -1;
+}
+
+spotter-scheduler .block.disabled {
+	background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100 ' stroke='gray' stroke-width='10'/><path d='M0 0 L100 100 ' stroke='gray' stroke-width='10'/></svg>");
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100% 100%, auto;
+}
+    

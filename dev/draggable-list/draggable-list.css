@@ -1,0 +1,52 @@
+	spotter-input[type="pull-command"] {
+	  display:inline-block;
+	  width:auto;
+	  position:relative;
+	}
+	
+	spotter-input[type="pull-command"] .list-item-cont {
+	  display:block;
+	  position:relative;
+	  width:auto;
+	  height:auto;
+	}
+	
+	spotter-input[type="pull-command"] .draggable-label {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 101;
+		color: black;
+		background-color: white;
+		text-align: center;
+		font-size: 2rem;
+		font-family: sans-serif;
+	  user-select: none;
+	  -moz-user-select: none;
+	}
+	
+	spotter-input[type="pull-command"] .ghost-proxy {
+	  color:#bbb;
+	  border:.1rem dashed #bbb;
+	  background-color:#fef;
+		font-size: 2rem;
+		font-family: sans-serif;
+	  text-align:center;
+	  user-select: none;
+	  -moz-user-select: none;
+	}
+	
+	.command-target {
+	  line-height: 3rem;
+		height: 3rem;
+	  width:10rem;
+	  border:1px dotted gray;
+	  float:right;
+	}
+	
+	spotter-input[type="pull-command"] spotter-option {
+	  line-height: 3rem;
+		height: 3rem;
+	  width:10rem;
+	  display:block;
+	}

@@ -1,0 +1,41 @@
+<html>
+<head>
+	<script src="/js/velocity.js"></script>
+	<script src="/js/spotter/spotter.js" data-modules="image,components,mobile"></script>
+	<link rel="stylesheet" href="cropper.css"/>
+	<link href="/spotter/css/universal.css" rel="stylesheet"/>
+</head>
+
+
+<body>
+	<spotter-template name="standard-image-cropper">
+		<div class="title">Crop Image</div>
+		<div class="canvas-cont"></div>	
+		<div class="toolbars">
+			<div class="toolbar">
+				<div class="crop-button square-icon">
+					<img src="/spotter/images/universal/crop_s_white.png" class="button"/>
+				</div>
+				<div class="undo-button square-icon">
+					<img src="/spotter/images/universal/undo_s_white.png" class="button"/>
+				</div>
+				<div class="save-button square-icon">
+					<img src="/spotter/images/universal/save_file_s_white.png" class="button"/>
+				</div>
+			</div>
+		</div>
+	</spotter-template>
+	<div id="content">
+		<form name="cropper-page" action="javascript;" method="POST">
+			<spotter-image-cropper name="test" accept="jpg,png,gif" aspect-ratio="1/1" blur-opacity="7" use-blur="true" frame-thickness="2" handle-thickness="2" fill-mode="contain" image-quality="90" image-mimetype="png" maximum-image-resize="512"></spotter-image-cropper>
+			
+			<spotter-image-cropper name="test2" template="standard-image-cropper" accept="jpg,png,gif" aspect-ratio="1/1" blur-opacity="7" use-blur="true" frame-thickness="2" handle-thickness="2" fill-mode="contain" image-quality="90" image-mimetype="png" maximum-image-resize="512"></spotter-image-cropper>
+		</form>
+	</div>
+</body>
+
+<script>
+	spotter.testLoaded(function(){
+		spotter.mobile(12, 1297, 'content');
+	});
+</script>

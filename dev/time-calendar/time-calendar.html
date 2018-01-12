@@ -1,0 +1,35 @@
+<html>
+<head>
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
+	<script src="/js/spotter/spotter.js"></script>
+	<script src="/js/moment.js"></script>
+	<script src="/js/date.js"></script>
+	<script src="/js/velocity.js"></script>
+	<link rel="stylesheet" href="../calendar/calendar.css"/>
+	<link rel="stylesheet" href="../slots/slots.css"/>
+	<link rel="stylesheet" href="../toggle/toggle.css"/>
+	<link rel="stylesheet" href="time-calendar.css"/>
+</head>
+
+
+<body>
+	<spotter-time-calendar lower-date-limit="now" upper-date-limit="-2months +1years" offset-frames=1 title-time="Start Time" title-date="set event start date"></spotter-time-calendar>
+		<!--
+		<spotter-calendar lower-limit="now" upper-limit="-2months +1years"></spotter-calendar>
+		
+		<div class="time">	
+			<spotter-slot class="start-hour vertical" offset-frames=1></spotter-slot>
+		</div>
+		-->		
+</body>
+
+<script src="../calendar/calendar.js"></script>
+<script src="../slots/new_slots.js"></script>
+<script src="../toggle/toggle.js"></script>
+<script src="time-calendar.js"></script>
+<script>
+	var els=Array.prototype.slice.call(document.querySelectorAll('spotter-time-calendar'));
+	els.forEach(function(el){
+		spotter.timeCalendar(el);
+	});
+</script>

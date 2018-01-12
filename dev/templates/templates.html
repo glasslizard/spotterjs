@@ -1,0 +1,352 @@
+<html>
+<script>
+
+Array.prototype.last=function(){
+	return this[this.length-1];
+}
+
+String.prototype.splice=function(start,end,insert){
+	var A = this.slice(0, start)
+		, B = this.slice(end);
+		
+	return A + insert + B;
+};
+
+var templateConstructor = function(template, name){
+	if(typeof name === 'string'){	
+		var saved = this.getTemplate(name);
+		if(saved !== null) return saved;
+	}
+	
+	this.closedStatements = [];
+	this.openComplexStatements = [];
+	var originalTemplate = template
+		, openComplexStatements = this.openComplexStatements//top level statements that are waiting to be closed. statements within are not parsed yet.
+		, closedStatements = this.closedStatements//complex statements that have been completed
+		, type
+		, countIf = 0
+		, countRepeat = 0
+		, absoluteIndex = 0//the length of the template as it has been removed so that indexes in the map represent indexes in the original template NOT the template fragment
+		, parent
+		, iter;
+	while(iter = templateConstructor.patterns.master.exec(template)){
+		type = iter[0].slice(0, 3);
+		//console.log(iter);
+		switch(type){
+			case 'IF[':
+				if(openComplexStatements.length){ this.registerComplex(); countIf++; break; }//this statement is contained in another so dont parse it but tell its parser to treat the parent as complex
+				else{
+					openComplexStatements.push({type:'if', start:absoluteIndex + iter.index, condition:iter[2], then: {start:absoluteIndex + iter.index + iter[0].length, isComplex:false}, else:null, leadingFrag: template.slice(0, iter.index)});
+					break;
+				}
+			case ']EL':
+				if(countIf > 0){ break; }
+				else{
+					parent = openComplexStatements.last();
+					parent.then.end = absoluteIndex + iter.index;
+					parent.then.template = originalTemplate.slice(parent.then.start, parent.then.end);
+					parent.else = {start:absoluteIndex + iter.index + iter[0].length, isComplex:false};
+					break;
+				}
+			case ']EN':
+				if(countIf > 0){ countIf--; break; }
+				else{
+					parent = openComplexStatements.pop();
+					if(typeof parent.else !== 'undefined'){
+						parent.else.end = absoluteIndex + iter.index;
+						parent.else.template = originalTemplate.slice(parent.else.start, parent.else.end);
+					}
+					parent.end = absoluteIndex + iter.index + iter[0].length;
+					parent.parse = templateConstructor.if(parent.condition, parent.then, parent.else);
+					closedStatements.push(parent);
+					break;
+				}
+			case 'REP':
+				if(openComplexStatements.length){ this.registerComplex(); countRepeat++; break; }//this statement is contained in another so dont parse it but tell its parser to treat the parent as complex
+				else{ 
+					openComplexStatements.push({type:'repeat', start:absoluteIndex + iter.index + iter[0].length, isComplex:false, leadingFrag: template.slice(0, iter.index)});
+					break;
+				}
+			case ']US':
+				if(countRepeat > 0){ countRepeat--; break; }
+				else{
+					parent = openComplexStatements.pop();
+					parent.template = originalTemplate.slice(parent.start, absoluteIndex + iter.index);
+					parent.end = absoluteIndex + iter.index + iter[0].length;
+					parent.use = iter[8];
+					parent.limit = iter[10] || -1;
+					parent.parse = templateConstructor.repeat(parent.template, parent.use, parent.limit, parent.isComplex);
+					closedStatements.push(parent);
+					break;
+				}
+				break;
+			default: //plain substitution '{{'
+				if(iter[14]){ 
+					if(openComplexStatements.length){ this.registerComplex(); break; }
+					else{
+						parent = {leadingFrag: template.slice(0, iter.index)};
+						parent.parse = templateConstructor.or(iter[0]);
+						closedStatements.push(parent);
+					}
+				}
+				else{
+					if(openComplexStatements.length){ break; }
+					else{
+						parent = {leadingFrag: template.slice(0, iter.index)};
+						parent.parse = templateConstructor.replacement(iter[12]); 
+						closedStatements.push(parent);
+					}
+				}
+		}
+		absoluteIndex += iter.index + iter[0].length;
+		template = template.slice(iter.index + iter[0].length);
+	}
+	if(template.length) closedStatements.push({leadingFrag: template});
+
+	if(typeof name === 'string') templateConstructor.registerTemplate(name, this);
+};
+templateConstructor.prototype.parse = function(row){
+  var HTML = '';
+  if(typeof this.closedStatements === 'undefined') console.error('this.closedStatements undefined:\n',this);
+  this.closedStatements.forEach(function(frag){
+  	HTML += frag.leadingFrag;
+	if(frag.parse) HTML += frag.parse(row);
+  });
+  return HTML;
+};
+templateConstructor.prototype.registerComplex = function(){
+	var parent = this.openComplexStatements.last();
+	if(parent.type === 'repeat'){ parent.isComplex = true; }
+	else if(parent.type === 'if'){
+		if(parent.else !== null){ parent.else.isComplex = true; }
+		else{ parent.then.isComplex = true; }
+	}
+};
+//really a filler function to just return a value from row
+templateConstructor.replacement = function(prop){
+  return function(row){
+  	return prop[row];
+  };
+};
+//use this when making multiple replacements
+templateConstructor.replaceMultiple = function(template){
+  var repgex = new RegExp(templateConstructor.patterns.replacement), map = [], l, finalFragment, iter;
+	
+	while(iter = repgex.exec(template)){
+		map.push({leadingFrag: template.slice(0, iter.index), prop: iter[1]});
+		template = template.slice(iter.index + iter[0].length);
+	}
+	finalFragment = template;
+  
+  var count = 0;
+  return function(row){
+	//if(++count > 15) debugger;
+  	if(typeof row === 'undefined') console.error('row undefined:\n',new Error().stack);
+	var HTML = '';
+	map.forEach(function(coord){
+		HTML += coord.leadingFrag + row[coord.prop];
+	});
+	HTML += finalFragment;
+	return HTML;
+  };
+};
+//or - {{prop}}OR{{prop2}}... if prop is empty, use prop2, if prop2 is empty....
+templateConstructor.or = function(template){
+	var props = [];
+	template = template.split('OR');
+	template.forEach(function(prop){	
+		props.push(prop.slice(2,-2));
+	});
+	return function(row){
+		for(var x=0, l=props.length; x<l; x++){
+			if(row[props[x]]) return row[props[x]];
+			return '';
+		}
+	};
+};
+//if - IF[cond]THEN[template](ELSE[template])ENDIF
+		//cond must be one of the following formats exactly:
+			//prop NOT compare(leave compare blank to just negate prop -> 'prop NOT')
+			//prop GT compare
+			//prop LT compare
+			//prop EQ compare
+			//prop NOT null
+			//prop NOT empty
+		//put compare in mustaches to use a dynamic value otherwise it will be treated as a static value
+templateConstructor.if = function(condition, then, otherwise, isComplex){
+	otherwise = otherwise || null;
+	
+	condition = condition.split(' ');
+	if(condition.length < 2){ console.error('an IF conditional was found ('+condition+') but the condition format is wrong'); return; }
+	var prop1 	 	= condition.shift().toLowerCase()
+		, operator 	= condition.shift()
+		, prop2  	= condition.join(' ')
+		, useStatic	= prop2.slice(0,2) !== '{{';
+	
+	switch(operator){
+		case 'NOT':
+			if(prop2 === 'null'){ 
+				condition = function(row){ return row[prop1] !== null; }; 
+			}
+			else if(prop2 === 'empty'){ 
+				condition = function(row){ return (row[prop1] || (row[prop1] == 0)); }; 
+			}
+			else{ 
+				if(useStatic){
+					condition = function(row){ return row[prop1] !== prop2; };
+				}
+				else{
+					prop2 = prop2.slice(2, -2);
+					condition = function(row){ return row[prop1] !== row[prop2]; }; 
+				}
+			}
+			break;
+		case 'GT':
+			if(useStatic){		
+				condition = function(row){return row[prop1] > prop2;};
+			}
+			else{
+				prop2 = prop2.slice(2, -2);
+				condition = function(row){return row[prop1] > row[prop2];};
+			}
+			break;
+		case 'LT':
+			if(useStatic){
+				condition = function(row){return row[prop1] < prop2;};
+			}
+			else{
+				prop2 = prop2.slice(2, -2);
+				condition = function(row){return row[prop1] < row[prop2];};
+			}
+			break;
+		case 'EQ':
+			if(useStatic){
+				condition = function(row){row[prop1] == prop2;};
+			}
+			else{
+				prop2 = prop2.slice(2, -2);
+				condition = function(row){row[prop1] == row[prop2];};
+			}
+			break;
+		default:
+			console.error("the 'if' condition sent could not be parsed.");
+	}
+	
+	//THEN
+	if(then.isComplex === false){
+		then.parse = templateConstructor.replaceMultiple(then.template);
+	}
+	else{
+		then = new templateConstructor(then.template);
+	}
+	
+	//ELSE (otherwise)
+	if(otherwise){
+		if(otherwise.isComplex === false){
+			otherwise.parse = templateConstructor.replaceMultiple(otherwise.template);
+		}
+		else{
+			otherwise = new templateConstructor(otherwise.template);
+		}
+	}
+	
+	return function(row){
+		if(condition(row)){
+			return then.parse(row);
+		}
+		else{
+			if(otherwise){ return otherwise.parse(row); }
+			else{ return ''; }
+		}
+	};
+};
+//'repeat' - repeat template using properties listed within REPEAT[template]USE[prop](LIMIT[int]) - If not LIMIT the number of repeats will be the 
+	//number of items in the property list for USE.
+templateConstructor.repeat = function(template, use, limit, isComplex){
+	//generate a list of replacements properties to use in splitting up the lists for those properties to repeatedly parse the template
+	var repgex = new RegExp(templateConstructor.patterns.replacement), props = [], replace = (isComplex ? new templateConstructor(template) : {parse:templateConstructor.replaceMultiple(template)});
+	
+	while(iter = repgex.exec(template)){
+		props.push(iter[1]);
+		template = template.slice(iter.index + iter[0].length);
+	}
+	
+	return function(row){
+		var useList 		= row[use].split(',')
+			, explodedRow 	= []
+			, HTML 			= ''
+			, l 			= (l == -1 ? useList.length : Math.min(limit, useList.length))
+			, x 			= 0;
+		//build a temporary set of rows from the various lists used in the replacements
+		props.forEach(function(prop){
+			arr = row[prop].split(',');
+			for(x=0; x<l; x++){	
+				if(typeof explodedRow[x] === 'undefined') explodedRow[x] = {};
+				explodedRow[x][prop] = arr[x] || 'undefined';
+			}
+		});
+		for(x=0; x<l; x++){
+			HTML += replace.parse(explodedRow[x]);
+		}
+		return HTML;
+	};
+};
+(function(){
+	var templates = {};
+	
+	templateConstructor.registerTemplate = function(name, map){
+		if(templates[name] !== undefined){ console.error('a template is already registered by name ('+name+')'); }
+		else if(!map){ console.error('a map must be provided to register for name ('+name+')'); }
+		else{
+			templates[name] = map;
+		}
+	};
+	
+	templateConstructor.prototype.getTemplate = function(name){
+		if(name && templates[name] !== undefined){
+			return templates[name];
+		}
+		else{ return null; }
+	};
+}());
+templateConstructor.patterns = {
+	replacement: '{{(.+?)}}',
+	repeat: 'REPEAT\\[(.+?)',
+	use: '\\]USE\\[(.+?)\\](LIMIT\\[([0-9]+)\\]){0,1}',
+	if: 'IF\\[(.+?)\\]THEN\\[',
+	else: '\\]ELSE\\[',
+	end: '\\]ENDIF'
+};
+templateConstructor.patterns.or = templateConstructor.patterns.replacement + '(OR{{(.+?)}})*';
+templateConstructor.patterns.master = new RegExp('(' + templateConstructor.patterns.if + ')|(' + templateConstructor.patterns.else + ')|(' + templateConstructor.patterns.end + ')|(' + templateConstructor.patterns.repeat + ')|(' + templateConstructor.patterns.use + ')|(' + templateConstructor.patterns.or + ')');
+
+templateConstructor.test = function(){
+	var template = '<div class="host-rating">'
+		+'IF[user_rating_host NOT null]THEN[{{user_rating_host}}]ELSE[high ma!]ENDIF'
+		+'</div><div class="guest-rating">'
+		+'IF[user_rating_guest GT {{user_rating_host}}]THEN['
+			+'IF[user_rating_guest LT 5]THEN[{{user_rating_host}}]ELSE[5]ENDIF'
+		+']ELSE[N/A]ENDIF'
+		+'</div><div>'
+		+'{{user_name}}OR{{user_first_name}}OR{{user_last_name}}'
+		+'</div>'
+		+'REPEAT[<div>{{event_name}} - {{event_type}}</div>]USE[event_name]LIMIT[4]'
+		+'{{TEST}}';
+	var testRow1 = {
+		user_rating_host: 25,
+		user_rating_guest: 100,
+		user_name: 'glass',
+		user_first_name: 'brian',
+		user_last_name: 'mcclaskey',
+		event_name: 'birthday,cinco de mayo,its wednesday!',
+		event_type: 'party,party'
+	};
+	
+	var parser = new templateConstructor(template, 'testTemplate');
+	alert(parser.parse(testRow1));
+	var parser2 = new templateConstructor(template, 'testTemplate');
+	alert(parser === parser2);
+};
+templateConstructor.test();
+</script>
+</html>

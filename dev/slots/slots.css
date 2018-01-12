@@ -1,0 +1,88 @@
+* {
+  box-sizing:border-box;
+  padding:0;
+  margin:0;
+}
+
+/* SLOTS */
+
+spotter-slot:before, spotter-slot:after{
+	z-index:101;
+	content:" ";
+	position:absolute;
+}
+
+spotter-slot:before{
+  top:0;
+}
+
+spotter-slot:after{
+  bottom:0;
+}
+
+spotter-slot {
+  overflow:hidden;
+  position:relative;
+  display:block;
+  font-size:1rem;
+}
+
+spotter-slot .spotter-hide-scroll {
+  overflow-y:scroll;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* OPTIONAL */
+
+spotter-slot .spotter-hide-scroll{
+  height:0;
+  padding-bottom:300%;
+}
+
+spotter-slot .spotter-hide-scroll {
+  background-color:white;
+}
+
+spotter-slot:before, spotter-slot:after{
+  background-color:rgba(255,255,255,.8);
+  left:5%;
+  padding-bottom:100%;
+  width:90%;
+}
+
+spotter-slot:before {
+  border-bottom:1px solid black;
+}
+
+spotter-slot:after{
+  border-top:1px solid black;
+}
+
+spotter-slot div.reel div.step{
+  height:0;
+  padding-bottom:100%;
+  font-size:24em;
+  position:relative;
+}
+
+div.reel, div.reel div.step {
+  width:100%;
+}
+
+spotter-slot div.step span.center {
+  bottom: 0;
+  display: block;
+  height: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: -1em;
+  vertical-align: middle;
+}
+
+spotter-slot.vertical {
+	overflow-x: hidden;
+}
